@@ -14,6 +14,8 @@ import frc.robot.subsystems.swervedrive.VisionSubsystem;
 
 import java.io.File;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import swervelib.SwerveInputStream;
 //import frc.robot.subsystems.swervedrive.Vision;
 
@@ -83,7 +85,7 @@ public class RobotContainer
 
     private void setupPathPlannerCommands()
     {
-      NamedCommands.registerCommand("Final Open Intake", intake.foldOpenIntake());
+      NamedCommands.registerCommand("Shoot Forward", shooter.shootForward());
     }
 
    private void configureBindings()
@@ -157,9 +159,7 @@ public class RobotContainer
     public Command getAutonomousCommand()
     {
       System.out.println("Working!");
-      // return new PathPlannerAuto("Middle Auto");
-      // return drivebase.runOnce(() -> new ChassisSpeeds(MetersPerSecond.of(-3), MetersPerSecond.of(0), RadiansPerSecond.of(0))).withTimeout(1.95).andThen(intake.foldOpenIntake());
-      return drivebase.driveForward().withTimeout(1.95);
+      return new PathPlannerAuto("Shoot Auto");
     }
 
     public void setMotorBrake(boolean brake)
@@ -170,5 +170,3 @@ public class RobotContainer
    
   
 }
-
-
