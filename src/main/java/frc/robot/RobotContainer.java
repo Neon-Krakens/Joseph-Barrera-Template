@@ -10,11 +10,12 @@ import frc.robot.subsystems.swervedrive.Intake;
 import frc.robot.subsystems.swervedrive.Shooter;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.swervedrive.Turret;
+import frc.robot.subsystems.swervedrive.VisionSubsystem;
 
 import java.io.File;
 import com.pathplanner.lib.auto.NamedCommands;
 import swervelib.SwerveInputStream;
-import frc.robot.subsystems.swervedrive.Vision;
+//import frc.robot.subsystems.swervedrive.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -32,7 +33,9 @@ public class RobotContainer
     private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
 
     //If anything goes wrong delete line 36
-    private final Vision vision = new Vision(drivebase::getPose, drivebase.getSwerveDrive().field);
+    //private final Vision vision = new Vision(drivebase::getPose, drivebase.getSwerveDrive().field);
+
+    private final VisionSubsystem vision = new VisionSubsystem();
 
     //Created a shooter
     Shooter shooter = new Shooter();
@@ -85,11 +88,20 @@ public class RobotContainer
 
    private void configureBindings()
     {
-      driverXbox.b().onTrue(Commands.runOnce(drivebase::zeroGyro));
+
+      /*********************************************************** Driver Commands ***************************************************/
+      //Zero the gyro
+      driverXbox.b()
+        .onTrue(Commands.runOnce(drivebase::zeroGyro));
+
+      //Turret Tracking
+      driverXbox.rightBumper()
+        .whileTrue(turret.aimWithVision(vision));
 
       Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveInputStream);
      
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      /*******************************************************************************************************************************/
 
       /****************************************************** Shooter Commands ******************************************************/
       //Top Shooter: Toggle On and Off
@@ -133,8 +145,6 @@ public class RobotContainer
       shooterXbox.x()
         .whileTrue(Commands.parallel(agitator.funnelReverse(), shooter.shooterIntakeReverse()))
         .onFalse(Commands.parallel(agitator.funnelStop(), shooter.stopShooterIntake()));
-
-        
       /****************************************************************************************************************************/
        
     }
@@ -157,7 +167,7 @@ public class RobotContainer
      
     }
 
-    /************************************************************** Command **************************************************************/
+   
   
 }
 

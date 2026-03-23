@@ -80,10 +80,26 @@ public class Turret extends SubsystemBase
         return turretEncoder.getPosition();
     }
 
+    public Command aimWithVision(frc.robot.subsystems.swervedrive.VisionSubsystem vision)
+    {
+        return Commands.run(() ->
+        {
+            if (vision.hasTurretHubTarget())
+            {
+                aimAtTarget(vision.getTurretHubYaw());
+                System.out.println("Hub Tag Found");
+            }
+            else
+            {
+                stopTurret();
+            }
+        }, this).finallyDo(() -> stopTurret());
+    }
+
     @Override
     public void periodic()
     {
-        System.out.println("Turret Position: " + turretEncoder.getPosition());
+        
     } 
 
 }
