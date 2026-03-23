@@ -1,0 +1,164 @@
+package frc.robot;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.swervedrive.Actuator;
+import frc.robot.subsystems.swervedrive.Agitator;
+import frc.robot.subsystems.swervedrive.Intake;
+import frc.robot.subsystems.swervedrive.Shooter;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.swervedrive.Turret;
+
+import java.io.File;
+import com.pathplanner.lib.auto.NamedCommands;
+import swervelib.SwerveInputStream;
+import frc.robot.subsystems.swervedrive.Vision;
+
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
+ * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
+ * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
+ */
+public class RobotContainer
+{
+
+  final CommandXboxController driverXbox = new CommandXboxController(0);
+   final CommandXboxController shooterXbox = new CommandXboxController(1);
+
+
+    //The robot's subsystems and commands are defined here...
+    private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+
+    //If anything goes wrong delete line 36
+    private final Vision vision = new Vision(drivebase::getPose, drivebase.getSwerveDrive().field);
+
+    //Created a shooter
+    Shooter shooter = new Shooter();
+
+    //Created a agitator
+    Agitator agitator = new Agitator();
+
+    //Create a intake
+    Intake intake = new Intake();
+
+    //Create a turret
+    Turret turret = new Turret();
+
+    //Create a actuator
+    Actuator actuator = new Actuator();
+
+    /**
+    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
+    */
+    public SwerveInputStream driveInputStream = SwerveInputStream.of(
+    drivebase.getSwerveDrive(),
+    () -> driverXbox.getLeftY(),
+    () -> driverXbox.getLeftX())
+    .withControllerRotationAxis(()-> driverXbox.getRightX())
+    .deadband(Constants.OperatorConstants.DEADBAND)
+    .scaleTranslation(0.5)
+    .allianceRelativeControl(false);
+      
+
+    /**
+    * The container for the robot. Contains subsystems, OI devices, and commands.
+    */
+    public RobotContainer()
+    {
+
+      //Configure the PathPlanner commands
+      setupPathPlannerCommands();
+
+      //Configure the trigger bindings
+      configureBindings();
+
+      DriverStation.silenceJoystickConnectionWarning(true);
+
+    }
+
+    private void setupPathPlannerCommands()
+    {
+      NamedCommands.registerCommand("Final Open Intake", intake.foldOpenIntake());
+    }
+
+   private void configureBindings()
+    {
+      driverXbox.b().onTrue(Commands.runOnce(drivebase::zeroGyro));
+
+      Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveInputStream);
+     
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+
+      /****************************************************** Shooter Commands ******************************************************/
+      //Top Shooter: Toggle On and Off
+      shooterXbox.rightBumper()
+        .toggleOnTrue(shooter.spinTopShooter());
+
+      //Intake: Toggle On and Off 
+      shooterXbox.leftBumper()
+        .toggleOnTrue(intake.spinIntakeForward());
+
+      //Open intake
+      shooterXbox.povDown()
+        .whileTrue((intake.foldOpenIntake()));
+
+      //Close intake
+      shooterXbox.povUp()
+        .whileTrue(intake.foldCloseIntake());
+
+        //Shoot: Hold R2
+      shooterXbox.rightTrigger()
+        .whileTrue(Commands.parallel(agitator.funnelForward(), shooter.spinShooterIntake()))
+        .onFalse(Commands.parallel(agitator.funnelStop(),shooter.stopShooterIntake()));
+
+      //Y = up Actuator
+      shooterXbox.y().onTrue(actuator.goUpCommand());
+
+      //A = down Actuator
+      shooterXbox.a().onTrue(actuator.goDownCommand());
+
+      //Movement Left
+      shooterXbox.povLeft()
+        .whileTrue(Commands.run(() -> turret.testTurnLeft(), turret))
+        .onFalse(Commands.runOnce(() -> turret.stopTurret(), turret));
+
+      //Turret: Movement Right
+      shooterXbox.povRight()
+        .whileTrue(Commands.run(() -> turret.testTurnRight(), turret))
+        .onFalse(Commands.runOnce(() -> turret.stopTurret(), turret));
+
+      //Agitator and shooter intake reverse
+      shooterXbox.x()
+        .whileTrue(Commands.parallel(agitator.funnelReverse(), shooter.shooterIntakeReverse()))
+        .onFalse(Commands.parallel(agitator.funnelStop(), shooter.stopShooterIntake()));
+
+        
+      /****************************************************************************************************************************/
+       
+    }
+
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand()
+    {
+      System.out.println("Working!");
+      // return new PathPlannerAuto("Middle Auto");
+      // return drivebase.runOnce(() -> new ChassisSpeeds(MetersPerSecond.of(-3), MetersPerSecond.of(0), RadiansPerSecond.of(0))).withTimeout(1.95).andThen(intake.foldOpenIntake());
+      return drivebase.driveForward().withTimeout(1.95);
+    }
+
+    public void setMotorBrake(boolean brake)
+    {
+     
+    }
+
+    /************************************************************** Command **************************************************************/
+  
+}
+
+
