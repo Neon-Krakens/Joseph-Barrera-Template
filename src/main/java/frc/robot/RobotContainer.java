@@ -80,17 +80,18 @@ public class RobotContainer
       configureBindings();
 
       //Configure the SmartDashboard
-      autos.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
-      autos.addOption("Open Intake", new PathPlannerAuto("Open Intake Auto"));
+      autos.setDefaultOption("Open Intake Auto", new PathPlannerAuto("Open Intake Auto"));
+      autos.addOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
 
+      //Silences Joystick warnings
       DriverStation.silenceJoystickConnectionWarning(true);
 
     }
 
     private void setupPathPlannerCommands()
     {
-      NamedCommands.registerCommand("Shoot Forward", shooter.shootForward());
       NamedCommands.registerCommand("Open Intake", intake.foldOpenIntake());
+      NamedCommands.registerCommand("Shoot Forward", shooter.shootForward());
     }
 
     private void configureBindings()

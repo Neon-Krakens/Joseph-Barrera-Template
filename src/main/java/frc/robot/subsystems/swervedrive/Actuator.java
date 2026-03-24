@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Actuator extends SubsystemBase
 {
-    
-    // PWM port (CHANGE THIS to your actual port)
+
+    //Create thr servo
     private final Servo actuator = new Servo(0);
 
     // Positions (0.0 to 1.0)

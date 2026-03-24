@@ -16,7 +16,7 @@ public class Turret extends SubsystemBase
     //Encoder
     private final RelativeEncoder turretEncoder = turret.getEncoder();
 
-    //TEMP LIMITS. SUBJECT TO CHANGE AFTER TESTING
+    //Limits
     private static final double MIN_TURRET_POSITION = -20.0;
     private static final double MAX_TURRET_POSITION = 10.0;
 
