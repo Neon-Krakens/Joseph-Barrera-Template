@@ -34,9 +34,6 @@ public class RobotContainer
     //The robot's subsystems and commands are defined here...
     private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
 
-    //If anything goes wrong delete line 36
-    //private final Vision vision = new Vision(drivebase::getPose, drivebase.getSwerveDrive().field);
-
     private final VisionSubsystem vision = new VisionSubsystem();
 
     //Created a shooter
@@ -66,7 +63,6 @@ public class RobotContainer
     .scaleTranslation(0.5)
     .allianceRelativeControl(false);
       
-
     /**
     * The container for the robot. Contains subsystems, OI devices, and commands.
     */
@@ -128,10 +124,12 @@ public class RobotContainer
         .onFalse(Commands.parallel(agitator.funnelStop(),shooter.stopShooterIntake()));
 
       //Y = up Actuator
-      shooterXbox.y().onTrue(actuator.goUpCommand());
+      shooterXbox.y()
+        .onTrue(actuator.goUpCommand());
 
       //A = down Actuator
-      shooterXbox.a().onTrue(actuator.goDownCommand());
+      shooterXbox.a()
+        .onTrue(actuator.goDownCommand());
 
       //Movement Left
       shooterXbox.povLeft()
