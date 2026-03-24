@@ -83,6 +83,9 @@ public class RobotContainer
       autos.setDefaultOption("Open Intake Auto", new PathPlannerAuto("Open Intake Auto"));
       autos.addOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
 
+      //Display the options 
+      SmartDashboard.putData("Auto Chooser", autos);
+
       //Silences Joystick warnings
       DriverStation.silenceJoystickConnectionWarning(true);
 
