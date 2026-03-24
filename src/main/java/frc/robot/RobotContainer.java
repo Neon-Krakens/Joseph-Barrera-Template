@@ -16,8 +16,10 @@ import java.io.File;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 import swervelib.SwerveInputStream;
-//import frc.robot.subsystems.swervedrive.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -28,8 +30,7 @@ public class RobotContainer
 {
 
   final CommandXboxController driverXbox = new CommandXboxController(0);
-   final CommandXboxController shooterXbox = new CommandXboxController(1);
-
+  final CommandXboxController shooterXbox = new CommandXboxController(1);
 
     //The robot's subsystems and commands are defined here...
     private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
@@ -50,6 +51,9 @@ public class RobotContainer
 
     //Create a actuator
     Actuator actuator = new Actuator();
+
+    //Give SmartDashboard the ability to choose Autos
+    private final SendableChooser<Command> autos = new SendableChooser<>();
 
     /**
     * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -75,6 +79,10 @@ public class RobotContainer
       //Configure the trigger bindings
       configureBindings();
 
+      //Configure the SmartDashboard
+      autos.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
+      autos.addOption("Open Intake", new PathPlannerAuto("Open Intake Auto"));
+
       DriverStation.silenceJoystickConnectionWarning(true);
 
     }
@@ -82,9 +90,10 @@ public class RobotContainer
     private void setupPathPlannerCommands()
     {
       NamedCommands.registerCommand("Shoot Forward", shooter.shootForward());
+      NamedCommands.registerCommand("Open Intake", intake.foldOpenIntake());
     }
 
-   private void configureBindings()
+    private void configureBindings()
     {
 
       /*********************************************************** Driver Commands ***************************************************/
@@ -101,7 +110,7 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
       /*******************************************************************************************************************************/
 
-      /****************************************************** Shooter Commands ******************************************************/
+      /****************************************************** Shooter Commands *******************************************************/
       //Top Shooter: Toggle On and Off
       shooterXbox.rightBumper()
         .toggleOnTrue(shooter.spinTopShooter());
@@ -157,7 +166,7 @@ public class RobotContainer
     public Command getAutonomousCommand()
     {
       System.out.println("Working!");
-      return new PathPlannerAuto("Shoot Auto");
+      return autos.getSelected();
     }
 
     public void setMotorBrake(boolean brake)
