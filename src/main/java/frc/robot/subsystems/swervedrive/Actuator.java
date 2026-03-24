@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Actuator extends SubsystemBase
 {
+    
     // PWM port (CHANGE THIS to your actual port)
     private final Servo actuator = new Servo(0);
 
     // Positions (0.0 to 1.0)
     private static final double UP_POSITION = .9;
     private static final double DOWN_POSITION = 0.4;
-   
 
     public Actuator()
     {
@@ -53,4 +53,5 @@ public class Actuator extends SubsystemBase
     {
         return Commands.runOnce(() -> stop(), this);
     }
+
 }
