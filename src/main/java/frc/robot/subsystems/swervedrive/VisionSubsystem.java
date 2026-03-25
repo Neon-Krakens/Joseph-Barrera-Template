@@ -69,6 +69,42 @@ public class VisionSubsystem extends SubsystemBase
     return 0.0;
     }
 
+    public double getTurretHubPitch()
+    {
+        var result = turretCam.getLatestResult();
+        if(!result.hasTargets())
+        {
+            return 0.0;
+        }
+        for (var target : result.getTargets())
+        {
+            if(isHubTag(target.getFiducialId()))
+            {
+                return target.getPitch();
+            }
+        }
+
+        return 0.0;
+    }
+
+    public double getTurretHubDistanceMeters()
+    {
+        //CHANGE THIS LATER TO REAL NUMBERS
+        double cameraHeightMeters = 0.50;
+        double targetHeightMeters = 2.00;
+        double cameraAngleDegrees = 0.0;
+
+        double pitchDegrees = getTurretHubPitch();
+        double totalAngleDegrees = cameraAngleDegrees + pitchDegrees;
+
+        if(Math.abs(totalAngleDegrees) < 0.001)
+        {
+            return 0.0;
+        }
+
+        return (targetHeightMeters - cameraHeightMeters) / Math.tan(Math.toRadians(totalAngleDegrees));
+    }
+
     // public boolean hasTurretTarget()
     // {
     //     return getTurretResult().hasTargets();

@@ -21,7 +21,7 @@ public class Turret extends SubsystemBase
     private static final double MAX_TURRET_POSITION = 0.0;
 
     //PID for aiming
-    private final PIDController aimPID = new PIDController(0.04, 0.0, 0.0);
+    private final PIDController aimPID = new PIDController(0.03, 0.0, 0.0);
 
      public Turret()
     {
@@ -71,7 +71,14 @@ public class Turret extends SubsystemBase
             stopTurret();
             return;
         }
+        
         double output = aimPID.calculate(yawErrorDegrees, 0.0);
+
+        if (Math.abs(output) < 0.08)
+        {
+            output = Math.copySign(0.08, output);
+        }
+
         setTurretPower(output);
     }
 
@@ -92,9 +99,16 @@ public class Turret extends SubsystemBase
           
             if (vision.hasTurretHubTarget())
             {
-                aimAtTarget(-vision.getTurretHubYaw());
+                double yaw = vision.getTurretHubYaw();
+                double pitch = vision.getTurretHubPitch();
+                double distance = vision.getTurretHubDistanceMeters();
+
+                aimAtTarget(-yaw);
+
                 System.out.println("Hub Tag Found");
-                System.out.println("Hub Yaw: " + vision.getTurretHubYaw());
+                System.out.println("Yaw" + yaw);
+                System.out.println("Pitch: " + pitch);
+                System.out.println("Distance:" + distance);
             }
             else
             {
