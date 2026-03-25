@@ -80,7 +80,7 @@ public class RobotContainer
       configureBindings();
 
       //Configure the SmartDashboard
-      autos.setDefaultOption("Open Intake Auto", new PathPlannerAuto("Open Intake Auto"));
+      autos.setDefaultOption("Middle Auto", new PathPlannerAuto("Middle Auto"));
       autos.addOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
 
       //Display the options 
@@ -93,6 +93,8 @@ public class RobotContainer
 
     private void setupPathPlannerCommands()
     {
+      NamedCommands.registerCommand("Spin Top Shooter", shooter.spinTopShooter());
+      NamedCommands.registerCommand("Shoot Forward", Commands.parallel(agitator.funnelForward(), shooter.spinShooterIntake()));
       NamedCommands.registerCommand("Open Intake", intake.foldOpenIntake());
       NamedCommands.registerCommand("Shoot Forward", shooter.shootForward());
     }
