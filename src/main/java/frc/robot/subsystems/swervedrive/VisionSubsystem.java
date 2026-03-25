@@ -24,9 +24,9 @@ public class VisionSubsystem extends SubsystemBase
         return bodyCam.getLatestResult();
     }
 
-    private boolean isHubTag(int id)
+   private boolean isHubTag(int id)
     {
-        return (id >= 2 && id <= 11) || (id >= 18 && id <= 27);
+        return (id == 9 || id == 10);
     }
 
     public boolean hasTurretHubTarget()

@@ -17,11 +17,11 @@ public class Turret extends SubsystemBase
     private final RelativeEncoder turretEncoder = turret.getEncoder();
 
     //Limits
-    private static final double MIN_TURRET_POSITION = -20.0;
-    private static final double MAX_TURRET_POSITION = 10.0;
+    private static final double MIN_TURRET_POSITION = -19;
+    private static final double MAX_TURRET_POSITION = 0.0;
 
     //PID for aiming
-    private final PIDController aimPID = new PIDController(0.02, 0.0, 0.0);
+    private final PIDController aimPID = new PIDController(0.04, 0.0, 0.0);
 
      public Turret()
     {
@@ -66,6 +66,11 @@ public class Turret extends SubsystemBase
 
     public void aimAtTarget(double yawErrorDegrees)
     {
+        if(Math.abs(yawErrorDegrees) < 1.5)
+        {
+            stopTurret();
+            return;
+        }
         double output = aimPID.calculate(yawErrorDegrees, 0.0);
         setTurretPower(output);
     }
@@ -84,10 +89,12 @@ public class Turret extends SubsystemBase
     {
         return Commands.run(() ->
         {
+          
             if (vision.hasTurretHubTarget())
             {
-                aimAtTarget(vision.getTurretHubYaw());
+                aimAtTarget(-vision.getTurretHubYaw());
                 System.out.println("Hub Tag Found");
+                System.out.println("Hub Yaw: " + vision.getTurretHubYaw());
             }
             else
             {
@@ -99,7 +106,7 @@ public class Turret extends SubsystemBase
     @Override
     public void periodic()
     {
-        
+        //System.out.println("Turret Position: " + turretEncoder.getPosition());
     } 
 
 }
