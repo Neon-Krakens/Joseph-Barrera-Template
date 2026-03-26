@@ -94,9 +94,12 @@ public class RobotContainer
     private void setupPathPlannerCommands()
     {
       NamedCommands.registerCommand("Spin Top Shooter", shooter.spinTopShooter());
-      NamedCommands.registerCommand("Shoot Forward", Commands.parallel(agitator.funnelForward(), shooter.spinShooterIntake()));
-      NamedCommands.registerCommand("Open Intake", intake.foldOpenIntake());
-      NamedCommands.registerCommand("Shoot Forward", shooter.shootForward());
+      NamedCommands.registerCommand("Spin Agitator", agitator.funnelForward());
+      NamedCommands.registerCommand("Spin Shooter Intake", shooter.spinShooterIntake());
+      NamedCommands.registerCommand("Stop Shooter Intake", shooter.stopShooterIntake());
+      NamedCommands.registerCommand("Stop Agitator", agitator.funnelStop());
+      // NamedCommands.registerCommand("Open Intake", intake.foldOpenIntake());
+      // NamedCommands.registerCommand("Shoot Forward", shooter.shootForward());
     }
 
     private void configureBindings()
