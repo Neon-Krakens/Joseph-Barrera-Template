@@ -92,7 +92,7 @@ public class Turret extends SubsystemBase
         return turretEncoder.getPosition();
     }
 
-    public Command aimWithVision(frc.robot.subsystems.swervedrive.VisionSubsystem vision)
+    public Command aimWithVision(frc.robot.subsystems.swervedrive.VisionSubsystem vision, frc.robot.subsystems.swervedrive.Shooter shooter, frc.robot.subsystems.swervedrive.SwerveSubsystem swervedrive)
     {
         return Commands.run(() ->
         {
@@ -105,14 +105,16 @@ public class Turret extends SubsystemBase
 
                 aimAtTarget(-yaw);
 
-                System.out.println("Hub Tag Found");
-                System.out.println("Yaw" + yaw);
-                System.out.println("Pitch: " + pitch);
-                System.out.println("Distance:" + distance);
+                SmartDashboard.putString("Tracking", "Hub Tag Found, Yaw: " + yaw + ", Pitch: " + pitch + ", Distance: " + distance);
+
+                //TODO: insert tracking code
+                shooter.setRPM(    );
             }
             else
             {
                 stopTurret();
+                shooter.stopShooter();
+                SmartDashboard.putString("Tracking", "HUB TAG NOT FOUND");
             }
         }, this).finallyDo(() -> stopTurret());
     }
