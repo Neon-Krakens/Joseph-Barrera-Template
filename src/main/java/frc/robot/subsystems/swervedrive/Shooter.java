@@ -50,6 +50,8 @@ public class Shooter extends SubsystemBase
 
         shooterLeft.configure(shooterConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         shooterRight.configure(shooterRightConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+
+        SmartDashboard.putNumber("RPM Factor", 400);
     }
 
     public void setRPM(double setPoint) {

@@ -144,7 +144,7 @@ public class Turret extends SubsystemBase
 
 
                 //shooting velocities
-                final double rpmFactor = 400;
+                final double rpmFactor = SmartDashboard.getNumber("RPM Factor", 400);
                 final double target_height = 1.8288;
                 // double target_distance = Math.sqrt((target_x-xp)*(target_x-xp)+(target_y-yp)*(target_y-yp));
                 double target_distance = distance;
