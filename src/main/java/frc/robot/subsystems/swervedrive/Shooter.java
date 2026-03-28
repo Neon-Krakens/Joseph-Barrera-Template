@@ -81,4 +81,13 @@ public class Shooter extends SubsystemBase
             shooterIntake.set(0.0);
         });
     }
+
+    public Command shooterIntakeReverse()
+    {
+        return Commands.runOnce(()->
+        {
+            shooterIntake.set(100);
+        });
+       
+    }
 }

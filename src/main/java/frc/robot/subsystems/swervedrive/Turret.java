@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import swervelib.SwerveDrive;
 
 public class Turret extends SubsystemBase
 {
@@ -98,7 +100,7 @@ public class Turret extends SubsystemBase
         return slope * Math.sqrt(x_v_rel * x_v_rel + y_v_rel * y_v_rel) * target_distance / hv - 4.9*target_distance*target_distance/(hv*hv) - target_height;
     }
 
-    public Command aimWithVision(frc.robot.subsystems.swervedrive.VisionSubsystem vision, frc.robot.subsystems.swervedrive.Shooter shooter, frc.robot.subsystems.swervedrive.SwerveSubsystem swervedrive)
+    public Command aimWithVision(frc.robot.subsystems.swervedrive.VisionSubsystem vision, frc.robot.subsystems.swervedrive.Shooter shooter, SwerveDrive swerveDrive)
     {
         return Commands.run(() ->
         {
@@ -113,16 +115,16 @@ public class Turret extends SubsystemBase
 
                 SmartDashboard.putString("Tracking", "Hub Tag Found, Yaw: " + yaw + ", Pitch: " + pitch + ", Distance: " + distance);
 
-                final double latency = .5; //seconds from signal to shoot to exit of ball. Probably this whole section of code should be run once to move motors and a second time after to see if correct, or if further adjustments are needed
+                //final double latency = .5; //seconds from signal to shoot to exit of ball. Probably this whole section of code should be run once to move motors and a second time after to see if correct, or if further adjustments are needed
                 final double slope = 2.3298; //tan(shooting angle)
 
                 //robot pos, assumes rotational and angular velocity remains constant
-                // double r = m_robotContainer.drivebase.swerveDrive.getPose().getRotation().getRadians();
-                // double rv = m_robotContainer.drivebase.swerveDrive.getRobotVelocity().omegaRadiansPerSecond;
-                // double xv = m_robotContainer.drivebase.swerveDrive.getRobotVelocity().vxMetersPerSecond;
-                // double yv = m_robotContainer.drivebase.swerveDrive.getRobotVelocity().vyMetersPerSecond;
-                // double xp = m_robotContainer.drivebase.swerveDrive.getPose().getX()+0.19685*Math.cos(r+latency*rv)+latency*xv; //TODO: check if this rotates correctly
-                // double yp = m_robotContainer.drivebase.swerveDrive.getPose().getY()+0.19685*Math.sin(r+latency*rv)+latency*yv;
+                // double r = swerveDrive.getPose().getRotation().getRadians();
+                // double rv = swerveDrive.getRobotVelocity().omegaRadiansPerSecond;
+                // double xv = swerveDrive.getRobotVelocity().vxMetersPerSecond;
+                // double yv = swerveDrive.getRobotVelocity().vyMetersPerSecond;
+                // double xp = swerveDrive.getPose().getX()+0.19685*Math.cos(r+latency*rv)+latency*xv; //TODO: check if this rotates correctly
+                // double yp = swerveDrive.getPose().getY()+0.19685*Math.sin(r+latency*rv)+latency*yv;
                 // xv += -0.19685*rv*Math.sin(r+latency*rv); //add on velocity from angular velocity
                 // yv += 0.19685*rv*Math.cos(r+latency*rv);
                 double xv = 0;
@@ -181,6 +183,7 @@ public class Turret extends SubsystemBase
                 stopTurret();
                 shooter.stopShooter();
                 SmartDashboard.putString("Tracking", "HUB TAG NOT FOUND");
+                SmartDashboard.putString("Targeting","needs tracking");
             }
         }, this).finallyDo(() -> stopTurret());
     }
