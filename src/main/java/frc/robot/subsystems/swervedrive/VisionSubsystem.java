@@ -30,7 +30,6 @@ public class VisionSubsystem extends SubsystemBase
    private boolean isHubTag(int id)
     {
         Optional<Alliance> alliance = DriverStation.getAlliance();
-        final double target_x;
         if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
             return (id == 25 || id == 26 || id == 27 || id == 24);
         } else {

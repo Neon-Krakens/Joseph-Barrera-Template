@@ -72,7 +72,7 @@ public class RobotContainer
     */
     public RobotContainer()
     {
-
+      shooter.Initialize();
       //Configure the PathPlanner commands
       setupPathPlannerCommands();
 
@@ -89,6 +89,8 @@ public class RobotContainer
       //Silences Joystick warnings
       DriverStation.silenceJoystickConnectionWarning(true);
 
+      //testing
+      shooter.setRPM(3000);
     }
 
     private void setupPathPlannerCommands()
