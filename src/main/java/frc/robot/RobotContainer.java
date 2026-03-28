@@ -122,6 +122,10 @@ public class RobotContainer
       /*******************************************************************************************************************************/
 
       /****************************************************** Shooter Commands *******************************************************/
+      shooterXbox.rightBumper()
+        .toggleOnTrue(Commands.run(()-> {
+            shooter.setRPM(5800);
+        }));
 
       //Intake: Toggle On and Off 
       shooterXbox.leftBumper()

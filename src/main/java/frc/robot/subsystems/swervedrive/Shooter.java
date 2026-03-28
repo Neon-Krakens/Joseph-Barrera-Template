@@ -38,8 +38,8 @@ public class Shooter extends SubsystemBase
         // set PID parameters
         shooterConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(0.001)
-        .i(0.)
+        .p(0.0001)
+        .i(0.000001)
         .d(0)
         .outputRange(-1, 1)
         .feedForward
