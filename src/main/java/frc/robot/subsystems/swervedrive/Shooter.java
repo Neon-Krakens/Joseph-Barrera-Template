@@ -39,19 +39,19 @@ public class Shooter extends SubsystemBase
         shooterConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .p(0.0001)
-        .i(0.000001)
-        .d(0)
+        .i(0.00000075)
+        .d(0.05)
         .outputRange(-1, 1)
         .feedForward
           // kV is now in Volts, so we multiply by the nominal voltage (12V)
-          .kV(12.0 / 5767, ClosedLoopSlot.kSlot1); //says that 12v usually results in 5767 RPM
+          .kV(12.0 / 5600, ClosedLoopSlot.kSlot1); //says that 12v usually results in 5767 RPM
 
         shooterRightConfig.follow(12, true); //follows 12, inverts
 
         shooterLeft.configure(shooterConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         shooterRight.configure(shooterRightConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-        SmartDashboard.putNumber("RPM Factor", 400);
+        SmartDashboard.putNumber("RPM Factor", 120);
     }
 
     public void setRPM(double setPoint) {
