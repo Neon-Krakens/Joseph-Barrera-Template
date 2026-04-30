@@ -72,7 +72,7 @@ public class RobotContainer
     */
     public RobotContainer()
     {
-
+      shooter.Initialize();
       //Configure the PathPlanner commands
       setupPathPlannerCommands();
 
@@ -89,11 +89,13 @@ public class RobotContainer
       //Silences Joystick warnings
       DriverStation.silenceJoystickConnectionWarning(true);
 
+      //testing
+      shooter.setRPM(3000);
     }
 
     private void setupPathPlannerCommands()
     {
-      NamedCommands.registerCommand("Spin Top Shooter", shooter.spinTopShooter());
+      NamedCommands.registerCommand("Shooter", turret.aimWithVision(vision, shooter, drivebase.swerveDrive));
       NamedCommands.registerCommand("Spin Agitator", agitator.funnelForward());
       NamedCommands.registerCommand("Spin Shooter Intake", shooter.spinShooterIntake());
       NamedCommands.registerCommand("Stop Shooter Intake", shooter.stopShooterIntake());
@@ -110,9 +112,9 @@ public class RobotContainer
       driverXbox.b()
         .onTrue(Commands.runOnce(drivebase::zeroGyro));
 
-      //Turret Tracking
+      //Turret Tracking and shooter motor
       driverXbox.rightBumper()
-        .whileTrue(turret.aimWithVision(vision));
+        .whileTrue(turret.aimWithVision(vision, shooter, drivebase.swerveDrive));
 
       Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveInputStream);
      
@@ -120,9 +122,10 @@ public class RobotContainer
       /*******************************************************************************************************************************/
 
       /****************************************************** Shooter Commands *******************************************************/
-      //Top Shooter: Toggle On and Off
       shooterXbox.rightBumper()
-        .toggleOnTrue(shooter.spinTopShooter());
+        .toggleOnTrue(Commands.run(()-> {
+            shooter.setRPM(5800);
+        }));
 
       //Intake: Toggle On and Off 
       shooterXbox.leftBumper()
@@ -177,12 +180,4 @@ public class RobotContainer
       System.out.println("Working!");
       return autos.getSelected();
     }
-
-    public void setMotorBrake(boolean brake)
-    {
-     
-    }
-
-   
-  
 }

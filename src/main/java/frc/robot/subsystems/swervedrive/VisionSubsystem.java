@@ -3,6 +3,9 @@ package frc.robot.subsystems.swervedrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import java.util.Optional;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class VisionSubsystem extends SubsystemBase
 {
@@ -26,7 +29,12 @@ public class VisionSubsystem extends SubsystemBase
 
    private boolean isHubTag(int id)
     {
-        return (id == 9 || id == 10);
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
+            return (id == 25 || id == 26 || id == 27 || id == 24);
+        } else {
+            return (id == 9 || id == 10 || id == 8 || id == 11);
+        }
     }
 
     public boolean hasTurretHubTarget()
@@ -90,9 +98,9 @@ public class VisionSubsystem extends SubsystemBase
     public double getTurretHubDistanceMeters()
     {
         //CHANGE THIS LATER TO REAL NUMBERS
-        double cameraHeightMeters = 0.50;
-        double targetHeightMeters = 2.00;
-        double cameraAngleDegrees = 0.0;
+        double cameraHeightMeters = 0.5588;
+        double targetHeightMeters = 1.1684;
+        double cameraAngleDegrees = 28.0;
 
         double pitchDegrees = getTurretHubPitch();
         double totalAngleDegrees = cameraAngleDegrees + pitchDegrees;
