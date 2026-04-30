@@ -24,6 +24,7 @@ import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import java.awt.Desktop;
 import java.util.ArrayList;
@@ -148,6 +149,7 @@ public class Vision
         {
             camera.poseEstimator.addHeadingData(Timer.getFPGATimestamp(), swerveDrive.getPose().getRotation());
             Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
+            SmartDashboard.putBoolean("Vision Pose Estimation", poseEst.isPresent());
             if (poseEst.isPresent()) {
                 var pose = poseEst.get();
                 swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
@@ -342,7 +344,7 @@ public class Vision
      * Left Camera
      */
     BACK_CAM("bodyCam",
-          new Rotation3d(0, 0, 0),
+          new Rotation3d(0, 0, 3.14159),
           new Translation3d(Units.inchesToMeters(-13.75),
                             Units.inchesToMeters(-4.75),
                             Units.inchesToMeters(14.187)),
@@ -532,7 +534,6 @@ public class Vision
       {
         mostRecentTimestamp = Math.max(mostRecentTimestamp, result.getTimestampSeconds());
       }
-
         resultsList = Robot.isReal() ? camera.getAllUnreadResults() : cameraSim.getCamera().getAllUnreadResults();
         resultsList.sort((PhotonPipelineResult a, PhotonPipelineResult b) -> {
           return a.getTimestampSeconds() >= b.getTimestampSeconds() ? 1 : -1;
