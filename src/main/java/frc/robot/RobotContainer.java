@@ -33,7 +33,7 @@ public class RobotContainer
   final CommandXboxController shooterXbox = new CommandXboxController(1);
 
     //The robot's subsystems and commands are defined here...
-    private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+    public final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
 
     private final VisionSubsystem vision = new VisionSubsystem();
 
