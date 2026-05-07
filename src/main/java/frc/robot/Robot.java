@@ -106,7 +106,7 @@ public class Robot extends TimedRobot
 
 
     //shooting velocities
-    final double rpmFactor = SmartDashboard.getNumber("RPM Factor", 400);
+    final double rpmFactor = SmartDashboard.getNumber("RPM Factor", 1200);
     final double target_height = 1.8288;
     double target_distance = Math.sqrt((target_x-xp)*(target_x-xp)+(target_y-yp)*(target_y-yp));
     //double x_target_dir = (target_x - xp)/target_distance;
@@ -138,6 +138,8 @@ public class Robot extends TimedRobot
         SmartDashboard.putString("Targeting","shooting_velocity: " + velocity + ", shooting_dir: " + shooting_dir + ", " + (height_at_edge - edge_height) + " M over edge");
     }
     m_robotContainer.shooter.setRPM(rpmFactor*velocity);
+    m_robotContainer.turret.aimAtTarget(-((shooting_dir - r + 1.5708) % 3.14159265359 - 1.5708));
+    //m_robotContainer.turret.aimAtTarget(0.2);
   }
 
   /**

@@ -95,7 +95,7 @@ public class RobotContainer
 
     private void setupPathPlannerCommands()
     {
-      NamedCommands.registerCommand("Shooter", turret.aimWithVision(vision, shooter, drivebase.swerveDrive));
+      // NamedCommands.registerCommand("Shooter", turret.aimWithVision(vision, shooter, drivebase.swerveDrive));
       NamedCommands.registerCommand("Spin Agitator", agitator.funnelForward());
       NamedCommands.registerCommand("Spin Shooter Intake", shooter.spinShooterIntake());
       NamedCommands.registerCommand("Stop Shooter Intake", shooter.stopShooterIntake());
@@ -109,61 +109,61 @@ public class RobotContainer
 
       /*********************************************************** Driver Commands ***************************************************/
       //Zero the gyro
-      driverXbox.b()
-        .onTrue(Commands.runOnce(drivebase::zeroGyro));
+      //driverXbox.b()
+      //  .onTrue(Commands.runOnce(drivebase::zeroGyro));
 
       //Turret Tracking and shooter motor
-      driverXbox.rightBumper()
-        .whileTrue(turret.aimWithVision(vision, shooter, drivebase.swerveDrive));
+      // driverXbox.rightBumper()
+      //   .whileTrue(turret.aimWithVision(vision, shooter, drivebase.swerveDrive));
 
       Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveInputStream);
      
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
       /*******************************************************************************************************************************/
 
-      /****************************************************** Shooter Commands *******************************************************/
-      shooterXbox.rightBumper()
-        .toggleOnTrue(Commands.run(()-> {
-            shooter.setRPM(5800);
-        }));
+     /****************************************************** Shooter Commands *******************************************************/
+    // shooterXbox.rightBumper()
+    //   .toggleOnTrue(Commands.run(()-> {
+    //       shooter.setRPM(5800);
+    //   }));
 
       //Intake: Toggle On and Off 
-      shooterXbox.leftBumper()
+      driverXbox.leftTrigger()
         .toggleOnTrue(intake.spinIntakeForward());
 
       //Open intake
-      shooterXbox.povDown()
+      driverXbox.povDown()
         .whileTrue((intake.foldOpenIntake()));
 
       //Close intake
-      shooterXbox.povUp()
+      driverXbox.povUp()
         .whileTrue(intake.foldCloseIntake());
 
         //Shoot: Hold R2
-      shooterXbox.rightTrigger()
+      driverXbox.rightTrigger()
         .whileTrue(Commands.parallel(agitator.funnelForward(), shooter.spinShooterIntake()))
         .onFalse(Commands.parallel(agitator.funnelStop(),shooter.stopShooterIntake()));
 
       //Y = up Actuator
-      shooterXbox.y()
-        .onTrue(actuator.goUpCommand());
+      //shooterXbox.y()
+      //  .onTrue(actuator.goUpCommand());
 
       //A = down Actuator
-      shooterXbox.a()
-        .onTrue(actuator.goDownCommand());
+      //shooterXbox.a()
+      //  .onTrue(actuator.goDownCommand());
 
       //Movement Left
-      shooterXbox.povLeft()
-        .whileTrue(Commands.run(() -> turret.testTurnLeft(), turret))
-        .onFalse(Commands.runOnce(() -> turret.stopTurret(), turret));
+      // shooterXbox.povLeft()
+      //   .whileTrue(Commands.run(() -> turret.testTurnLeft(), turret))
+      //   .onFalse(Commands.runOnce(() -> turret.stopTurret(), turret));
 
       //Turret: Movement Right
-      shooterXbox.povRight()
-        .whileTrue(Commands.run(() -> turret.testTurnRight(), turret))
-        .onFalse(Commands.runOnce(() -> turret.stopTurret(), turret));
+      // shooterXbox.povRight()
+      //   .whileTrue(Commands.run(() -> turret.testTurnRight(), turret))
+      //   .onFalse(Commands.runOnce(() -> turret.stopTurret(), turret));
 
       //Agitator and shooter intake reverse
-      shooterXbox.x()
+      driverXbox.povLeft()
         .whileTrue(Commands.parallel(agitator.funnelReverse(), shooter.shooterIntakeReverse()))
         .onFalse(Commands.parallel(agitator.funnelStop(), shooter.stopShooterIntake()));
       /****************************************************************************************************************************/
