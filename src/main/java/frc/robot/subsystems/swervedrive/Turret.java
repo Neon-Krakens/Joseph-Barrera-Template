@@ -33,7 +33,7 @@ public class Turret extends SubsystemBase
     public void setTurretPower(double power, double angle)
     {
         double position = getTurretAngle();
-        System.out.println(position + ", " + angle + ", " + power);
+        //System.out.println(position + ", " + angle + ", " + power);
 
         //STOP if trying to go past left limit
         if (position <= MIN_TURRET_POSITION && power < 0) {
